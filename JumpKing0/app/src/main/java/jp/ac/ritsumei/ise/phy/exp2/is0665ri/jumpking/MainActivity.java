@@ -19,15 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
         // コンテンツビューを指定されたレイアウトに設定する
         setContentView(R.layout.activity_main);
-
-        // MediaPlayerを使用して「pizzaman」のBGMを初期化する
-        mediaPlayer = MediaPlayer.create(this, R.raw.pizzaman);
-
-        // BGMをループ再生する場合は、ループを設定する
-        mediaPlayer.setLooping(true);
-
-        // BGMの再生を開始する
-        mediaPlayer.start();
     }
 
     // 開始ボタンがタップされた時のコールバックメソッド
@@ -37,36 +28,5 @@ public class MainActivity extends AppCompatActivity {
 
         // play_JumpKing アクティビティを開始する
         startActivity(intent);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        // アクティビティが一時停止した際にBGMも一時停止する
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // アクティビティが再開された際にBGMを再生する
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // アクティビティが破棄される際にMediaPlayerのリソースも解放する
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
     }
 }
