@@ -305,10 +305,10 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         if (backgroundBitmap == null) {
             backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_1);
         }
-        character_rightBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.king_right);
-        character_leftBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.king_left);
-        character_right_charge_Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_2);
-        character_left_charge_Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_3);
+        character_rightBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.right);
+        character_leftBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.left);
+        character_right_charge_Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.right_crouch);
+        character_left_charge_Bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.left_crouch);
 
         characterY = 1080 - character_rightBitmap.getHeight();
         characterY0 = characterY;
@@ -323,7 +323,7 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         character_right_charge_Bitmap = Bitmap.createScaledBitmap(character_right_charge_Bitmap, newWidth, newHeight_crouch, true);
         character_left_charge_Bitmap = Bitmap.createScaledBitmap(character_left_charge_Bitmap, newWidth, newHeight_crouch, true);
 
-        characterX = (backgroundBitmap.getWidth()/2)-(character_rightBitmap.getWidth()/2) ; // キャラクターの初期X座標
+        characterX = 1000 ; // キャラクターの初期X座標
         characterX0 = characterX;
 
         endright = 1670;
@@ -373,22 +373,34 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
     }
     private void drawCanvas() {
         Canvas c = sHolder.lockCanvas();
-        c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        if (c == null) return; // Canvasがnullの場合は処理を中断
 
-        // 背景などのオブジェクトを描画するメソッド
-        drawBackgroundAndObjects(c);
+        try {
+            c.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
-        if (text){
-            drawGameOverText(c);
+            // 背景などのオブジェクトを描画するメソッド
+            drawBackgroundAndObjects(c);
+
+            if (text){
+                drawGameOverText(c);
+            }
+
+            // キャラクターを描画するメソッド
+            drawCharacter(c);
+
+            drawCountText(c);
+        } finally {
+            // Canvasの解放
+            sHolder.unlockCanvasAndPost(c);
         }
 
-        // キャラクターを描画するメソッド
-        drawCharacter(c);
-
-        drawCountText(c);
-
-        sHolder.unlockCanvasAndPost(c);
+        // ビットマップの解放（例）
+        if (backgroundBitmap != null) {
+            backgroundBitmap.recycle();
+            backgroundBitmap = null;
+        }
     }
+
 
     // 背景などのオブジェクトを描画するメソッド
     private void drawBackgroundAndObjects(Canvas c) {
@@ -436,9 +448,6 @@ public class MySurfaceView extends SurfaceView implements Runnable, SurfaceHolde
         float y = 200;// 上にオフセットして描画
 
         c.drawText(count/60 + "分" + count%60 + "秒", x, y, p);
-
-
-//
     }
 
     // キャラクターを描画するメソッド

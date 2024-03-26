@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JumpKing"
         tools:targetApi="31" >
-        
+
         <activity
             android:name=".play_JunpKing"
             android:exported="false"
